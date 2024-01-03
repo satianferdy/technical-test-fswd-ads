@@ -17,7 +17,12 @@ class CategoryController extends Controller
         $categories = Category::all();
 
         // return response CeteogryResource
-        return CategoryResource::collection($categories);
+        // return json response
+        return response()->json([
+            'success' => true,
+            'message' => 'Fetch all categories',
+            'data' => CategoryResource::collection($categories),
+        ]);
     }
 
     /**
@@ -31,7 +36,9 @@ class CategoryController extends Controller
 
             // return response success
             return response()->json([
+                'success' => true,
                 'message' => 'Category created successfully',
+                'data' => new CategoryResource($category),
             ], 201);
         } catch (\Exception $e) {
             // return error message
@@ -80,7 +87,9 @@ class CategoryController extends Controller
 
             // return response success
             return response()->json([
+                'success' => true,
                 'message' => 'Category updated successfully',
+                'data' => new CategoryResource($category),
             ], 200);
         } catch (\Exception $e) {
             // return error message
