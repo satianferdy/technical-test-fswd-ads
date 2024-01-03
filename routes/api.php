@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductAssetsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,12 +21,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// categories
 Route::apiResource('categories', CategoryController::class);
-// Route::apiResource('products', ProductController::class);
+
+// products
 Route::get('products', [ProductController::class, 'index']);
 Route::post('products', [ProductController::class, 'store']);
 Route::get('products/{id}', [ProductController::class, 'show']);
 Route::put('products/{id}', [ProductController::class, 'update']);
 Route::delete('products/{id}', [ProductController::class, 'destroy']);
+
+// product assets
+Route::get('assets', [ProductAssetsController::class, 'index']);
+Route::post('assets', [ProductAssetsController::class, 'store']);
+Route::put('assets/{id}', [ProductAssetsController::class, 'update']);
+Route::delete('assets/{id}', [ProductAssetsController::class, 'destroy']);
 
 // Route::get('categories', [CategoryController::class, 'index']);
