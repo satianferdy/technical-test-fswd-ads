@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -13,15 +13,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
-    }
+        // all categories
+        $categories = Category::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        // return response CeteogryResource
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -29,31 +25,69 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        // try to create category
+        try {
+            $category = Category::create($request->validated());
+
+            // return response success
+            return response()->json([
+                'message' => 'Category created successfully',
+            ], 201);
+        } catch (\Exception $e) {
+            // return error message
+            return response()->json([
+                'message' => "Something went wrong. Please try again later."
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show($id)
     {
-        //
-    }
+        // Category details
+        $category = Category::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        //
+        // if category not found
+        if (!$category) {
+            return response()->json([
+                'message' => 'Category not found'
+            ], 404);
+        }
+
+        // return response CategoryResource
+        return new CategoryResource($category);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(StoreCategoryRequest $request, $id)
     {
-        //
+        // try to update category
+        try {
+            $category = Category::find($id);
+
+            // if category not found
+            if (!$category) {
+                return response()->json([
+                    'message' => 'Category not found'
+                ], 404);
+            }
+
+            $category->update($request->validated());
+
+            // return response success
+            return response()->json([
+                'message' => 'Category updated successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            // return error message
+            return response()->json([
+                'message' => "Something went wrong. Please try again later."
+            ], 500);
+        }
     }
 
     /**
@@ -61,6 +95,22 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        // Detail
+        $category = Category::find($category->id);
+
+        // if category not found
+        if (!$category) {
+            return response()->json([
+                'message' => 'Category not found'
+            ], 404);
+        }
+
+        //delete category
+        $category->delete();
+
+        // return response success
+        return response()->json([
+            'message' => 'Category deleted successfully',
+        ], 200);
     }
 }

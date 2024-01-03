@@ -11,7 +11,7 @@ class StoreCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,29 @@ class StoreCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        if (request()->isMethod('POST')) {
+            return [
+                'name' => 'required|unique:categories,name',
+            ];
+        } else {
+            return [
+                'name' => 'required|unique:categories,name,',
+            ];
+        }
+    }
+
+    public function messages()
+    {
+        if (request()->isMethod('POST')) {
+            return [
+                'name.required' => 'Category name is required',
+                'name.unique' => 'Category name already exists',
+            ];
+        } else {
+            return [
+                'name.required' => 'Category name is required',
+                'name.unique' => 'Category name already exists',
+            ];
+        }
     }
 }
