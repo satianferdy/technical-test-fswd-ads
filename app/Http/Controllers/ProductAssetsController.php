@@ -73,6 +73,7 @@ class ProductAssetsController extends Controller
                 ], 404);
             }
 
+            // update product_id
             $productAssets->product_id = $request->product_id;
 
             // if image is uploaded
@@ -88,6 +89,7 @@ class ProductAssetsController extends Controller
                 // generate new image name
                 $imageName = Str::random(10) . '.' . $request->image->getClientOriginalExtension();
                 $productAssets->image = $imageName;
+
 
                 // save new image
                 $storage->put($imageName, file_get_contents($request->image));

@@ -13,8 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // all categories
-        $categories = Category::all();
+        // Mengambil data kategori dan mengurutkannya berdasarkan jumlah produk
+        $categories = Category::withCount('products')->orderByDesc('products_count')->get();
 
         // return response CeteogryResource
         // return json response

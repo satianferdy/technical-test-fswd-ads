@@ -24,12 +24,12 @@ class StoreProductAssetsRequest extends FormRequest
         if (request()->isMethod('POST')) {
             return [
                 'product_id' => 'required|exists:products,id',
-                'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ];
         } else {
             return [
                 'product_id' => 'required|exists:products,id',
-                'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ];
         }
     }
@@ -49,10 +49,6 @@ class StoreProductAssetsRequest extends FormRequest
             return [
                 'product_id.required' => 'Product ID is required',
                 'product_id.exists' => 'Product ID does not exist',
-                'image.*.required' => 'Image is required',
-                'image.*.image' => 'Image must be an image',
-                'image.*.mimes' => 'Image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image.*.max' => 'Image must be less than 2048 kilobytes.',
             ];
         }
     }
