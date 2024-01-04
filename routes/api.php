@@ -34,7 +34,7 @@ Route::delete('products/{id}', [ProductController::class, 'destroy']);
 // product assets
 Route::get('assets', [ProductAssetsController::class, 'index']);
 Route::post('assets', [ProductAssetsController::class, 'store']);
-Route::put('assetsupdate/{id}', [ProductAssetsController::class, 'update']);
+Route::put('assets/{id}', [ProductAssetsController::class, 'update']);
 Route::delete('assets/{id}', [ProductAssetsController::class, 'destroy']);
 
 // Route::get('categories', [CategoryController::class, 'index']);

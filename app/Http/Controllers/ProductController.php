@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,8 +14,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        // get latest products
-        $products = Product::latest()->get();
+        // Ambil data produk beserta asetnya dan urutkan berdasarkan harga
+        $products = Product::with('assets')->orderByDesc('price')->get();
 
         // return json response
         return response()->json([
@@ -111,10 +112,10 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
         // detail
-        $product = Product::find($product->id);
+        $product = Product::find($id);
 
         // if product not found
         if (!$product) {
@@ -124,21 +125,19 @@ class ProductController extends Controller
             ], 404);
         }
 
-        // try to delete product
-        try {
-            $product->delete();
-
-            // return success message
-            return response()->json([
-                'success' => true,
-                'message' => 'Product deleted successfully'
-            ], 200);
-        } catch (\Exception $e) {
-            // return error message
-            return response()->json([
-                'success' => false,
-                'message' => "Something went wrong. Please try again later."
-            ], 500);
+        // delete assets product
+        foreach ($product->assets as $asset) {
+            Storage::disk('public')->delete($asset->image);
+            $asset->delete();
         }
+
+        // delete product
+        $product->delete();
+
+        // return json response
+        return response()->json([
+            'success' => true,
+            'message' => 'Product and assets deleted successfully'
+        ]);
     }
 }

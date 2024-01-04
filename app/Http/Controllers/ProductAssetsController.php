@@ -19,8 +19,12 @@ class ProductAssetsController extends Controller
         // get all product assets
         $productAssets = ProductAssets::all();
 
-        // return a collection of product assets
-        return ProductAssetsResource::collection($productAssets);
+        // return JSON response
+        return response()->json([
+            'success' => true,
+            'message' => 'Fetch all product assets',
+            'data' => ProductAssetsResource::collection($productAssets),
+        ]);
     }
 
     /**
